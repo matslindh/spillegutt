@@ -28,7 +28,7 @@ class CPU:
         }
 
     def execute(self):
-        cycles, instr = self.ops[self.get_8b_from_PC()]]
+        cycles, instr = self.ops[self.get_8b_from_PC()]
         self.increment_PC(1)
         instr()
 
