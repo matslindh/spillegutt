@@ -31,3 +31,12 @@ class CPURegisters:
     def get_HL(self):
         return self.H << 8 + self.L
 
+    def flag(self, flag_type):
+        return self.cpu_registers.F & flag_type
+
+    def set_flag(self, flag_type):
+        self.cpu_registers.F = self.cpu_registers.F | flag_type
+
+    def reset_flag(self, flag_type):
+        self.cpu_registers.F = self.cpu_registers.F & ~flag_type
+
