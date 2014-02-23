@@ -3,10 +3,11 @@ from Memory import Memory
 from functools import partial
 
 class CPU:
-    def __init__(self):
+    def __init__(self, cpu_registers, memory):
         self.cpu_registers = CPURegisters()
         self.hw_registers = HardwareRegisters()
         self.memory = Memory(self.hw_registers)
+        self.reset()
 
         self.ops = {
             0x00: (1, self.instr_nop),
@@ -78,6 +79,46 @@ class CPU:
             0x3F: (1, self.instr_ccf),
             
         }
+
+    def reset(self):
+        self.cpu_registers.AF = 0x01B0
+        self.cpu_registers.BC = 0x0013
+        self.cpu_registers.DE = 0x00D8
+        self.cpu_registers.HL = 0x014D
+        self.cpu_registers.SP = 0xFFFE
+        self.cpu_registers.PC = 0x0100
+
+        self.memory.write(0xFF05, 0x00)
+        self.memory.write(0xFF06, 0x00)
+        self.memory.write(0xFF07, 0x00)
+        self.memory.write(0xFF10, 0x80)
+        self.memory.write(0xFF11, 0xBF)
+        self.memory.write(0xFF12, 0xF3)
+        self.memory.write(0xFF14, 0xBF)
+        self.memory.write(0xFF16, 0x3F)
+        self.memory.write(0xFF17, 0x00)
+        self.memory.write(0xFF19, 0xBF)
+        self.memory.write(0xFF1A, 0x7F)
+        self.memory.write(0xFF1B, 0xFF)
+        self.memory.write(0xFF1C, 0x9F)
+        self.memory.write(0xFF1E, 0xBF)
+        self.memory.write(0xFF20, 0xFF)
+        self.memory.write(0xFF21, 0x00)
+        self.memory.write(0xFF22, 0x00)
+        self.memory.write(0xFF23, 0xBF)
+        self.memory.write(0xFF24, 0x77)
+        self.memory.write(0xFF25, 0xF3)
+        self.memory.write(0xFF26, 0xF1)
+        self.memory.write(0xFF40, 0x91)
+        self.memory.write(0xFF42, 0x00)
+        self.memory.write(0xFF43, 0x00)
+        self.memory.write(0xFF45, 0x00)
+        self.memory.write(0xFF47, 0xFC)
+        self.memory.write(0xFF48, 0xFF)
+        self.memory.write(0xFF49, 0xFF)
+        self.memory.write(0xFF4A, 0x00)
+        self.memory.write(0xFF4B, 0x00)
+        self.memory.write(0xFFFF, 0x00)
 
     def execute(self):
         cycles, instr = self.ops[self.get_8b_from_PC()]
